@@ -1,0 +1,107 @@
+#creates a game board with chaotic natural growth of a population
+
+import matplotlib
+import numpy as np
+
+def conway(s,p):                          # Forming Gameboard 
+        board = np.random.random((s, s))
+        for i in range(s):
+            for j in range(s):          #generating random values for the board
+                if board[i, j] > p:
+                    board[i, j] = 0
+                elif board[i, j] < p:
+                    board[i, j] = 1
+                else:
+                    temp = p
+                    while temp == p:
+                        temp = rand.random()
+                    if temp > p:
+                        board[i, j] = 0  # dead
+                    else:
+                        board[i, j] = 1  # alive
+        board = board
+        return board
+
+
+def advance(b,t):
+    'accepts a conway board (b) and moves it t steps according to rules'
+    new = np.array(b)
+    for time in range(t):
+        old = np.array(new)
+        for i in b:             #Looping over each element of the board
+            left = i - 1
+            right = i + 1
+            upper = j - 1
+            down = j + 1                #validating that we are within bounds
+            left = validate(left,s)
+            right = validate(right,s)
+            upper = validate(up,s)
+            down = validate(down, s)
+            new[i,j] = getValues(old, i , i , left, right, upper, down)
+    return new
+
+def getValues(old, i ,j, lft, rt, up, dwn):
+    "Counts the neighboring values of a point on the board and uses that to determine if it will become dead or alive"
+    alive = 0                               #initializing counts of population
+    dead = 0
+    if old[i,up] == 1:
+        alive += 1
+    else:
+        alive += 1
+    if old[rt,up] == 0:
+        dead += 1
+    else:
+        alive += 1
+    if old[i,dwn] == 0:
+        dead += 1
+    else: alive += 1
+    if old[lft,up] == 0:
+        dead += 1
+    else:
+        alive += 1
+    if old[lft,j] == 0:
+        dead +=1
+    else:
+        alive += 1
+    if old[rt,j] == 0:
+        dead +=1
+    else:
+        alive +=1
+
+    if old [rt,dwn] == 0:
+        dead += 1
+    else:
+        alive += 1
+    p = old[i,j]
+
+    if p == 1:                  #   If we have a live cell
+        if alive == 2 or 3:             #and it has 2 or 3 live neighbors
+            return 1                            #it remains alive
+        if alive < 2:     # if live cell has less than 2 or more than 3 neighbors it dies.
+            return 0
+        if alive >3:
+            return 0
+    if p == 0:                  #if we have a dead cell
+        if alive == 3:                      #and it has exactly 3 neighbors
+            return 1                                #it will become alive
+        else:
+            return 0
+
+def validate (location, size):
+    "determines that we stay within bounds while advancing the board"
+    if location > (size - 1):
+        location = 0
+    elif location < 0:
+        location = size -1
+    return location
+
+def plotConway(s,p,time):
+    "plots a conway point given an size, percentage, and the amount of time elapsed"
+    con = conway(s,p)
+    plt.imshow(con, 'GnBu')
+    plt.show()
+    con2 = advance(con,time)
+    plt.imshow(con1, 'GnBu')
+    plt.show()
+
+plotConway(10,.2,4)
