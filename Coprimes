@@ -1,0 +1,36 @@
+import math
+print('Coprime Number Test')
+# 2 numbers are coprime if the greatest common divisor is 1#
+
+def test_loop():
+    '''Asks the user for input numbers in a continuous loop and displays a message stating whether coprime.'''
+
+    # gathering user input#
+    a = int(input('First Number:'))
+    b = int(input('Second Number:'))
+    questions = [a, b]
+
+
+    #Printing output message for user.#
+    if coprime(a, b):                                    #calls the coprime function to make calculation#
+        print('{} and {} are coprime.'.format(a, b))
+
+    else:
+        print('{} and {} are not coprime.'.format(a, b))
+
+    user_cont = input('Do you wish to continue? Answer "yes" or "no" :')
+
+    # Determining whether user wishes to continue loop#
+    if user_cont == 'yes':
+        test_loop()
+    if user_cont == 'no':
+        print('Goodbye')
+
+
+def coprime(num1, num2):
+    '''Calculates if two numbers are coprime.'''
+    if math.gcd(num1, num2) == 1:
+        return True
+
+
+test_loop()
