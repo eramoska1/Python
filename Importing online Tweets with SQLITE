@@ -1,0 +1,115 @@
+#Evelina Ramoskaite
+import json
+import sqlite3
+import urllib.request as urllib
+import codecs
+from operator import itemgetter
+#connecting to database
+conn = sqlite3.connect ( 'dsc450.db' )  # open the connection
+cursor = conn.cursor ()
+
+#clean uo
+cursor.execute ( "DROP TABLE IF EXISTS Tweets" )
+cursor.execute ( "DROP TABLE IF EXISTS User" )
+#creating user table
+
+uTable = '''CREATE TABLE User
+(
+  id NUMBER,
+  name VARCHAR2(140),
+  screen_name VARCHAR2(20),
+  description VARCHAR2(30),
+  friends_count NUMBER,
+  CONSTRAINT id_str_PK
+     PRIMARY KEY(id)
+); '''
+cursor.execute(uTable)
+
+#creating tweets table
+
+tTable = '''CREATE TABLE Tweets
+(
+  created_at VARCHAR2(40),
+  id_str VARCHAR2(30),
+  user_id NUMBER,
+  text VARCHAR2(140),
+  source VARCHAR2(200),
+  in_reply_to_user_id NUMBER,
+  in_reply_to_screen_name VARCHAR2(15),
+  in_reply_to_status_id NUMBER,
+  retweet_count NUMBER,
+  contributors VARCHAR2(5),
+  CONSTRAINT id_str_PK
+     PRIMARY KEY(id_str),
+  CONSTRAINT user_FK
+     FOREIGN KEY(user_id)
+     REFERENCES User(id)
+); '''
+cursor.execute(tTable)
+
+
+#importing json and creating two lists with my values
+
+fd=urllib.urlopen("http://rasinsrv07.cstcis.cti.depaul.edu/CSC455/Assignment5.txt")
+efd=open('errorfile.txt','w')     #file for errors
+
+userl = []         #empty lists for users and tweets
+tweetl = []
+
+for i in range(10000):
+    tweet=fd.readline().decode('utf8')
+    try:
+        tdict = json.loads(tweet)                         #filling user list
+        users = []
+        users.append(tdict['user']['id'])
+        users.append(tdict['user']['name'])
+        users.append(tdict['user']['screen_name'])
+        users.append(tdict['user']['description'])
+        users.append ( tdict['user']['friends_count'] )
+        userl.append(users)
+
+        tweetlist = []                                  #filling tweet list
+        tweetlist.append(tdict['user']['created_at'])
+        tweetlist.append(tdict['id_str'])
+        tweetlist.append(tdict['user']['id_str'])
+        tweetlist.append(tdict['text'])
+        tweetlist.append(tdict['source'])
+        tweetlist.append(tdict['in_reply_to_user_id'])
+        tweetlist.append(tdict['in_reply_to_screen_name'])
+        tweetlist.append(tdict['in_reply_to_status_id_str'])
+        tweetlist.append(tdict['retweet_count'])
+        tweetlist.append(tdict['contributors'])
+        tweetl.append(tweetlist)
+
+    except(ValueError):                             #Seperate file for errors
+        error=fd.readline().decode('ascii','ignore')
+        efd.write(error)
+        pass
+
+#populating user and tweet tables
+
+for line in userl:
+    values=str(line)
+    v=values.split(',')
+    sql= "INSERT OR IGNORE INTO User VALUES (?,?,?,?,?);"
+    cursor.execute(sql,(v[0],v[1],v[2],v[3],v[4]))
+
+for line in tweetl:
+    values=str(line)
+    v=values.split(',')
+    tstatement = "INSERT OR IGNORE INTO Tweets VALUES (?,?,?,?,?,?,?,?,?,?);"
+    cursor.execute(tstatement,(v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9]))
+conn.commit()
+
+### Check ###
+#User Table
+qry=cursor.execute('SELECT * From User LIMIT 1;')
+check1=qry.fetchall()
+print('USER TABLE')
+print(str(check1))
+
+#Tweet Table
+qry2=cursor.execute('SELECT * FROM Tweets LIMIT 1;')
+check2=qry2.fetchall()
+print('TWEET TABLE')
+print(str(check2))
