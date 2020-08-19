@@ -1,0 +1,58 @@
+import sqlite3, csv
+from pprint import pprint
+
+conn = sqlite3.connect ( 'dsc450.db' )  # open the connection
+cursor = conn.cursor ()
+
+#clean uo
+cursor.execute ( "DROP TABLE IF EXISTS Driver" )
+
+#Creating Table
+createtbl = """
+CREATE TABLE Driver
+(
+  License       NUMBER,    
+  Renewed      VARCHAR2(30),
+  Status VARCHAR2(16),
+  StatusDate DATE,
+  DriverType VARCHAR2(15),
+  LicenseType VARCHAR2(15),
+  OrgIssueDate DATE,
+  Name VARCHAR2(20),
+  Sex VARCHAR2(6),
+  City VARCHAR2(20),
+  State VARCHAR2(2),
+  RecordNumber VARCHAR2(11),
+  
+  CONSTRAINT RecordNumber_pk
+    PRIMARY KEY(RecordNumber)
+);
+"""
+cursor.execute(createtbl)
+
+#Populating Table from CSV File
+fd = open('Public_Chauffeurs_Short_hw3.csv', 'r')
+reader = csv.reader(fd)
+next(reader)    #skipping heading
+
+#Iterating over each piece of the row
+for row in reader:
+        items = ''
+        for i in row:
+            items = items + ','+ '"'+ i + '"'
+
+        items = items[1:]   # last item should not have comma after it
+        global statement    #I made this global to check it at the end.
+        statement= "INSERT INTO Driver VALUES (" + items + ');'
+        cursor.execute(statement)
+fd.close()
+
+#Finalizing the Database
+conn.commit ()
+
+
+#Checking Results
+cursor.execute('SELECT * FROM Driver')
+results=cursor.fetchall()
+pprint(results)              #Checking the Table Data
+print(statement)             #Checking the Insert Statement
