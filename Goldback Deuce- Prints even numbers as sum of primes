@@ -1,0 +1,38 @@
+#Evelina Ramoskaite
+# 1/29/2020
+def list_primes(start, end):
+    'prints each even number in the range as a sum of two primes.'
+    for i in range(start, end + 1, 2):  # iterating through each even number in range
+        primes = [str(i)]  # creating list of all numbers start to end
+        for j in range(1, i + 1):  # iterating from 1 up to the number we are solving for
+
+            if prime_number(j) and prime_number(j - 1):  # finds primes that add up to the even number
+
+                primes.append(
+                    '{} + {}'.format(j, i - j))  # adds formatted prime equation to end of each even number in list
+
+        print(' = '.join(primes))  # joins even numbers with equations and prints them
+
+
+def prime_number(n):
+    "Checks if user inputed number is prime. Returns True if n is prime, and False otherwise."
+    # 1 is not prime
+    if n < 2:
+        return False
+    # if n is even, with exception of 2, it is not prime
+    if n == 2:
+        return True
+    #even numbers
+    if n > 2 and n % 2 == 0:
+        return False
+    # itterates over odd numbers
+    for i in range(2, n, 2):
+        if n % i == 0:  # if the remainder is 0, number is not prime
+            return False
+        else:
+            return True  # if there is no divisor by end of the loop, n is prime.
+
+
+
+
+list_primes(4, 100)
