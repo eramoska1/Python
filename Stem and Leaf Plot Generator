@@ -1,0 +1,63 @@
+import pprint
+
+def main_function():
+    # greet user
+    print("Stem and Leaf Plot Generator")
+    print("Hello.")
+
+    # loop while user wants to do things
+    while True:
+        # get input
+        chosen_file = input('Please input the file number (1, 2, or 3) or "quit()": ')
+
+        # quit if they want to quit
+        if chosen_file == 'quit':
+            break
+
+        # verify that the file is 1, 2, or 3
+        if chosen_file not in {'1', '2', '3'}:
+            print('Wrong file, please input 1, 2, or 3')
+            continue
+
+        # the input files should be in the same directory as the script
+        filename = 'StemAndLeaf{}.txt'.format(chosen_file)
+
+        sorted_numbers = read_data(filename)
+
+        # display plot
+        display_plot(sorted_numbers)
+
+def read_data(filename):
+    # read the lines of the file
+    infile = open(filename, "r")
+    line_list = infile.readlines()
+    infile.close()
+
+    # convert the lines to numbers, add them to a list, and then sort them
+    numbers = []
+    for line in line_list:
+        line = line.strip()
+        # make sure not to process empty lines
+        if line:
+            numbers.append(int(line))
+    numbers.sort()
+    return numbers
+
+
+def display_plot(numbers):
+    plot = {}
+    for number in numbers:
+        # get the leading digits for stem
+        leading = int(number / 10)
+        # get the training digit for leaves
+        trailing = number % 10
+
+        # if we do not have a list in the dict for the stem then add it
+        if leading not in plot:
+            plot[leading] = []
+        plot[leading].append(trailing)
+
+    # deciding to use pretty print to output the plot in a readable format
+    pprint.pprint(plot)
+
+main_function()
