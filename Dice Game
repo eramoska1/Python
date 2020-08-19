@@ -1,0 +1,216 @@
+########### Code For Dice #########
+import random
+class SixSidedDie:
+    def __init__(self,sides):
+         self.sides=6
+
+    def __roll__(self):
+        return random.randint(1,self.sides)
+
+    def __getFaceValue__(self):
+        print(self.roll)
+
+    def __repr__(six):
+        return ("{}".format(six.roll))
+
+
+class __TenSidedDie__(SixSidedDie):
+    def __ init__(ten,sides):
+        ten.sides = 10
+
+
+
+class __TwentySidedDie__ (SixSidedDie):
+    def __init__(twenty,sides):
+        twenty.sides = 20
+
+
+class __cup__:
+    def __init__(cup):
+
+    def __roll__(cup):
+
+    def __getSum__(cup):
+
+    def __repr__(cup):
+
+
+
+
+######### Code For Game ############
+
+import random
+
+def mainFunction():
+    "Loops while user wishes to play the game"
+    bal = 100   #starting balance
+    greetUser()
+    start = askplay()
+    while start == "yes":
+        goalForgame(name,bal)
+        outcome= rollingDice()      #rolls dice
+        bal= gameOutcome(outcome,goal,bet, bal) #finds payout, new balance
+        start = continueGame()   #determines if user wants to continue
+    else:
+        print("Thanks for playing!")
+        print("{}, your final balance is {}".format(name,bal))  #Exit statement
+
+
+
+def greetUser():
+    "Greets player, obtains their name, determines if they wish to play."
+    print("Hello! Welcome to the game.")
+    print("Your starting balance is 100")
+    global name
+    name = input("What is your name?: ")
+    return name
+
+def askplay ():
+    "asks if the user wishes to play."
+    play = input("Would you like to play?(yes/no): ")
+    return play
+
+
+
+def goalForgame(name,balance):
+    "obtains user goal/bet"
+
+    # goal
+    global goal
+    goal = random.randint(1, 100)
+    print("The goal is {}.".format(goal))
+
+    # bet
+    global bet
+    bet = int(input("What would you like to bet from your balance?: "))
+
+    #validating that bet is non-zero and not exceeding balance
+    if bet < 0:
+        print("Bets must be above 0. Enter a real bet!")
+    if bet > balance:
+        print("You're betting beyond your means, friend. ")
+        bet = int(input("What would you like to bet from your balance of {} ?:".format(balance)))
+
+
+def rollingDice():
+    "asks user what dice to roll,then rolls them."
+    #roll preference input of user
+    roll5 = int(input("How many 6-sided dice do you wish to roll? :  "))
+    roll10 = int(input("How many 10-sided dice do you wish to roll? : "))
+    roll20 = int(input("How many 20-sided dice do you wish to roll? : "))
+
+    #rolling the dice based on input
+    cup = Cup(roll5, roll10, roll20)
+    outcome = cup.roll()
+    print("You rolled {}.".format(outcome))
+    return outcome
+
+
+def gameOutcome(outcome,goal,bet,balance):
+    "calculates the payout of the game, given the goals and dice roll results"
+    # Within 3 of goal
+    if outcome <= goal + 3 and outcome >= goal -3 :
+        balance += 5* bet
+        print("You were close! Congratulations, your new balance is {}.".format(balance))
+        return balance
+
+    # Perfect
+    elif outcome == goal:
+        balance += 10 * bet
+        print("Well, lucky you...You won! Your new balance is {}.".format(balance))
+        return balance
+
+    # Within 10 of goal
+    elif outcome <= goal + 10 and outcome >= goal - 10:
+        balance += 2 * bet
+        print("You were somewhat close. Your balance has increased to {}.".format(balance))
+        return balance
+
+    # Not within 10 of goal
+    else:
+        balance += -bet
+        print("Ouch.You lost. Your balance is {}. ".format( balance))
+        return balance
+
+
+
+def continueGame():
+     "asks the user if they want to continue playing"
+     cont = input("Do you wish to continue? (yes/no) : ")
+     return cont
+
+
+
+
+####Dice/Cup Calculations####
+
+class SixSidedDie:
+    "acts as a 6-sided die"
+
+    sides = 6
+
+    def roll(self):
+        "rolls a die of any size"
+        self.value = random.randint(1,self.sides)  #generates random integer depending on number of sides
+        return self.value
+
+    def getFacevalue(self):
+        "shows last die value"
+        print (self.sides)
+
+    def __repr__(self):
+        return "SixSidedDie({})".format(random.randint(1,self.sides))
+
+class TenSidedDie(SixSidedDie):
+    "10-sided die"
+    sides = 10
+
+    def __repr__(self):
+        return "TenSidedDies({})".format(self.value)
+
+class TwentySidedDie(SixSidedDie):
+    "20-sided Die"
+    sides = 20
+
+    def __repr__(self):
+        "returns last die value"
+        return "TwentySidedDie({})".format(self.value)
+
+class Cup :
+    "cup containing a given number of 6,10,20 sided dice"
+    def __init__(self,D6,D10,D20):
+        self.D6 = D6
+        self.D10 = D10
+        self.D20 = D20
+        self.sum = 0
+
+
+    def roll(self):
+        "rolls 6,10,and 20 sided dies in a cup"
+
+        #rolling 6-sided dice
+        for i in range(0,self.D6):  #looping however many n sided dice there are in the cup
+            d6 = SixSidedDie()
+            value1 = d6.roll()  #obtaining outcome of each roll
+            self.sum += value1  #adding each outcome to sum
+
+        #rolling 10-sided dice
+        for i in range(0,self.D10):
+            d10 = TenSidedDie()
+            value2 = d10.roll()
+            self.sum += value2
+
+        #rolling 20-sided dice
+        for i in range(0,self.D20):
+            d20 = TwentySidedDie()
+            value3 = d20.roll()
+            self.sum += value3
+
+
+
+        return self.sum        #adding all of the rolls
+    def getSum(self):
+        "presents sum of cup roll"
+        print(self.sum)
+
+mainFunction()
