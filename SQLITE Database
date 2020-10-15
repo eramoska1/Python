@@ -1,7 +1,7 @@
 import sqlite3, csv
 from pprint import pprint
 
-conn = sqlite3.connect ( 'dsc450.db' )  # open the connection
+conn = sqlite3.connect ( 'db1.db' )  # open the connection
 cursor = conn.cursor ()
 
 #clean uo
@@ -31,7 +31,7 @@ CREATE TABLE Driver
 cursor.execute(createtbl)
 
 #Populating Table from CSV File
-fd = open('Public_Chauffeurs_Short_hw3.csv', 'r')
+fd = open('Public_Chauffeurs_Short.csv', 'r')
 reader = csv.reader(fd)
 next(reader)    #skipping heading
 
