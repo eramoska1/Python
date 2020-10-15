@@ -1,3 +1,8 @@
+# Any number that reduces to 1 when you take the sum of the square 
+# of its digits and continue iterating it until it yields 1 
+# is a happy number; any number that doesn't, isn't.
+
+
 def main_function():
     # greet user
     print("Happy Primes")
