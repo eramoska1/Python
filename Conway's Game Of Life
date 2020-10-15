@@ -1,4 +1,7 @@
-#creates a game board with chaotic natural growth of a population
+#creates a cellular automaton game board with chaotic natural growth of a population
+#A dead cell with exactly three living neighbours becomes alive.
+#A living cell with two or three living neighbours remains alive.
+#In all other cases, the cell becomes, or remains, dead.
 
 import matplotlib
 import numpy as np
